@@ -27,6 +27,7 @@ The script that comunicate with microcontroller is written in Python 3. It uses 
 - [PySerial](https://github.com/pyserial/pyserial "PySerial") for UART communication,
 - [PyCaw](https://github.com/AndreMiras/pycaw "PyCaw") for volume manipulation
 - [monitorcontrol](https://github.com/newAM/monitorcontrol "monitorcontrol") for brightness chaning via DDC/CI interface 
+- [tkinter](https://docs.python.org/3/library/tkinter.html) for displaying dialog box
 
 ___
 
