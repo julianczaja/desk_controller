@@ -33,8 +33,8 @@ ___
 
 ### CAD
 The case was designed in FreeCad. Models used:
-- https://www.thingiverse.com/thing:1933779 by DonJuanito, CC License
-- https://www.thingiverse.com/thing:2970774/ by FrankLumien, CC License
+- WemosD1Mini - https://www.thingiverse.com/thing:1933779 by DonJuanito, CC License
+- Knob - https://www.thingiverse.com/thing:2970774/ by FrankLumien, CC License
 
 <p align="center">
 <img src="media/photo1.jpg">
