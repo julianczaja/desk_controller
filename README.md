@@ -27,13 +27,14 @@ The script that comunicate with microcontroller is written in Python 3. It uses 
 - [PySerial](https://github.com/pyserial/pyserial "PySerial") for UART communication,
 - [PyCaw](https://github.com/AndreMiras/pycaw "PyCaw") for volume manipulation
 - [monitorcontrol](https://github.com/newAM/monitorcontrol "monitorcontrol") for brightness chaning via DDC/CI interface 
+- [tkinter](https://docs.python.org/3/library/tkinter.html) for displaying dialog box
 
 ___
 
 ### CAD
 The case was designed in FreeCad. Models used:
-- https://www.thingiverse.com/thing:1933779 by DonJuanito, CC License
-- https://www.thingiverse.com/thing:2970774/ by FrankLumien, CC License
+- WemosD1Mini - https://www.thingiverse.com/thing:1933779 by DonJuanito, CC License
+- Knob - https://www.thingiverse.com/thing:2970774/ by FrankLumien, CC License
 
 <p align="center">
 <img src="media/photo1.jpg">
