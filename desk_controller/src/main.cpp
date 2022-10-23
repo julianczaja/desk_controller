@@ -11,6 +11,7 @@
 #define MODE_2_PIN D2
 
 void on_button_clicked();
+void update_leds();
 void IRAM_ATTR readEncoderISR();
 
 uint8_t mode = 1;
@@ -37,11 +38,12 @@ void setup()
 
   pinMode(MODE_1_PIN, OUTPUT);
   pinMode(MODE_2_PIN, OUTPUT);
+  update_leds();
 
   rotaryEncoder.begin();
   rotaryEncoder.setup(readEncoderISR);
   rotaryEncoder.setBoundaries(-99999, 99999, false);
-  rotaryEncoder.setAcceleration(50);
+  rotaryEncoder.setAcceleration(70);
   rotaryEncoder.setEncoderValue(0);
 }
 
@@ -82,16 +84,27 @@ void on_button_clicked()
     mode = 2;
     mode1value = rotaryEncoder.readEncoder();
     rotaryEncoder.setEncoderValue(mode2value);
-    digitalWrite(MODE_1_PIN, HIGH);
-    digitalWrite(MODE_2_PIN, LOW);
   }
   else
   {
     mode = 1;
     mode2value = rotaryEncoder.readEncoder();
     rotaryEncoder.setEncoderValue(mode1value);
+  }
+  update_leds();
+}
+
+void update_leds()
+{
+  if (mode == 1)
+  {
+    analogWrite(MODE_1_PIN, 20);
+    digitalWrite(MODE_2_PIN, LOW);
+  }
+  else
+  {
     digitalWrite(MODE_1_PIN, LOW);
-    digitalWrite(MODE_2_PIN, HIGH);
+    analogWrite(MODE_2_PIN, 20);
   }
 }
 
