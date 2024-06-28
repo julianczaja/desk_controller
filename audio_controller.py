@@ -1,10 +1,7 @@
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from ctypes import POINTER, cast
-from comtypes import CLSCTX_ALL
-from numpy import interp
+import alsaaudio
 import time
 
-UPDATE_INTERVAL_MS = 20
+UPDATE_INTERVAL_MS = 70
 
 
 def clamp(n, minn, maxn):
@@ -13,11 +10,8 @@ def clamp(n, minn, maxn):
 
 class AudioController:
     def __init__(self):
-        speakers = AudioUtilities.GetSpeakers()
-        interface = speakers.Activate(
-            IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-        self.volume_controller = cast(interface, POINTER(IAudioEndpointVolume))
-        self.volume = self.get_volume()
+        self.mixer = alsaaudio.Mixer('Master')
+        self.volume = self.mixer.getvolume()[0]
 
         self.last_volume = self.volume
         self.last_volume_change = time.time() * 1000
@@ -28,7 +22,8 @@ class AudioController:
     def increase_volume(self, d_volume):
         t_now = time.time() * 1000
 
-        self.volume = clamp(self.volume + (d_volume / 2.0), 0.0, 100.0)
+        #self.volume = clamp(self.volume + (d_volume / 2.0), 0.0, 100.0)
+        self.volume = clamp(self.volume + d_volume, 0.0, 100.0)
         d_time = t_now - self.last_volume_change
 
         if d_time > UPDATE_INTERVAL_MS and self.last_volume != self.volume:
@@ -36,12 +31,11 @@ class AudioController:
             self.last_volume_change = time.time() * 1000
             self.last_volume = self.volume
 
-    def set_volume(self):  # 0-100 float
-        new_volume = self.volume / 100.0
-        self.volume_controller.SetMasterVolumeLevelScalar(new_volume, None)
+    def set_volume(self): # 0-100 int
+        self.mixer.setvolume(int(self.volume))
 
-    def get_volume(self):  # 0-100 float
-        return self.volume_controller.GetMasterVolumeLevelScalar() * 100.0
+    def get_volume(self): # 0-100 int
+        return self.mixer.getvolume()[0]
 
 
 if __name__ == "__main__":

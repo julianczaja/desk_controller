@@ -1,5 +1,5 @@
 import time
-import msvcrt
+import getch
 from serial import SerialException
 from audio_controller import AudioController
 from gui_controller import GuiController
@@ -22,27 +22,30 @@ def handle_frame(frame, monitor_controller, gui_controller, audio_controller):
 
 
 def main():
+    print("Hello world!")
     audio_controller = AudioController()
     gui_controller = GuiController()
     monitor_controller = MonitorController()
     serial_controller = SerialController()
 
     active = True
+    print("active")
 
     while active:
         try:
-            if msvcrt.kbhit() and msvcrt.getch() == b'r':
-                print("Resetting audio controller")
-                gui_controller.show_general_message(
-                    "Resetting audio controller")
-                audio_controller.reset()
-                gui_controller.update()
-                time.sleep(1)
-                continue
+            # if msvcrt.kbhit() and getch() == b'r':
+            # if getch.getch() == b'r':
+            #     print("Resetting audio controller")
+            #     gui_controller.show_general_message(
+            #         "Resetting audio controller")
+            #     audio_controller.reset()
+            #     gui_controller.update()
+            #     time.sleep(1)
+            #     continue
             if serial_controller.is_connected == False:
                 serial_controller.connect()
                 gui_controller.show_general_message(
-                    "Connected to serial {}".format(serial_controller.serial.name))
+                    "Connected to {}".format(serial_controller.serial.name))
             else:
                 frame = serial_controller.update()
                 if frame != None:

@@ -1,20 +1,17 @@
 import tkinter as tk
 import time
-from ctypes import windll
 
 DIALOG_TIMEOUT = 2000
-FONT_SIZE = 14
+FONT_SIZE = 10
 DIALOG_WIDTH = 400
 DIALOG_HEIGHT = 100
 BACKGROUND_COLOR = "#f0f0f0"
 
-ICONS_DIR_PATH = "~/Desktop/desk_controller/icons"
+ICONS_DIR_PATH = "~/Desktop/Programowanie/desk_controller-master/icons"
 
 class GuiController:
 
     def __init__(self):
-
-        windll.shcore.SetProcessDpiAwareness(1)  # to fix blurr problems
 
         self.win = tk.Tk()
         self.hide()

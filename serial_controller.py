@@ -22,6 +22,7 @@ class SerialController:
         self.frame_buff = bytearray()
 
     def connect(self):
+        print("connect")
         com_port = self.find_esp32_port()
 
         if com_port != None:
@@ -40,9 +41,9 @@ class SerialController:
         ports = serial.tools.list_ports.comports()
 
         for p in ports:
-            if "USB-SERIAL CH340" in p.description:
-                print("Found ESP32 on port {}".format(p.name))
-                return p.name
+            if "USB2.0-Ser!" in p.description:
+                print("Found ESP32 on port {}".format(p.device))
+                return p.device
 
         pretty_ports = ''.join("--> {}\n".format(p.description) for p in ports)
         print("Can't find ESP32 in given ports:\n{}".format(pretty_ports))
