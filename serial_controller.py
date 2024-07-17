@@ -22,31 +22,29 @@ class SerialController:
         self.frame_buff = bytearray()
 
     def connect(self):
-        com_port = self.find_esp32_port()
+        ports = serial.tools.list_ports.comports()
+        ch340_ports = [p for p in ports if "USB-SERIAL CH340" in p.description]
 
-        if com_port != None:
-            print("Trying to connect to serial ({})...".format(com_port))
-            self.serial = serial.Serial(com_port, baudrate=115200, timeout=1)
-            self.is_connected = True
-            print("Successfully connected to serial {}".format(self.serial.name))
-        else:
+        if ch340_ports.count == 0:
             raise serial.SerialException("Can't find ESP32 COM port")
+            
+        for p in ch340_ports:
+            com_port = p.name
+            print("Found ESP32 on port {}".format(com_port))
+            print("Trying to connect to serial ({})...".format(com_port))
+            _serial = serial.Serial(com_port, baudrate=115200, timeout=1)
+            
+            if _serial.isOpen():
+                self.serial = _serial
+                self.is_connected = True
+                print("Successfully connected to serial {}".format(self.serial.name))
+                return
+            
+        print("Couldn't connect to any device")
 
     def disconnect(self):
         self.serial.close()
         self.is_connected = False
-
-    def find_esp32_port(self):
-        ports = serial.tools.list_ports.comports()
-
-        for p in ports:
-            if "USB-SERIAL CH340" in p.description:
-                print("Found ESP32 on port {}".format(p.name))
-                return p.name
-
-        pretty_ports = ''.join("--> {}\n".format(p.description) for p in ports)
-        print("Can't find ESP32 in given ports:\n{}".format(pretty_ports))
-        return None
 
     def __parse_input(self, frame):
         new_frame = False

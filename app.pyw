@@ -1,48 +1,50 @@
 import time
-import msvcrt
 from serial import SerialException
 from audio_controller import AudioController
 from gui_controller import GuiController
 from monitor_controller import MonitorController
 from serial_controller import SerialController
 
+global active
 
-def handle_frame(frame, monitor_controller, gui_controller, audio_controller):
+
+def handle_frame(
+    frame,
+    monitor_controller: MonitorController,
+    gui_controller: GuiController,
+    audio_controller: AudioController,
+):
     d_volume, d_brightness = frame
 
     if d_brightness != 0:
         monitor_controller.increase_brightness(d_brightness)
-        gui_controller.show_brightness_message(
-            " Brightness: {}".format(monitor_controller.get_brightness()))
+        gui_controller.show_brightness(monitor_controller.get_brightness())
 
     if d_volume != 0:
-        audio_controller.increase_volume(d_volume)
-        gui_controller.show_volume_message(
-            " Volume: {:.1f}".format(audio_controller.get_volume()))
+        audio_controller.change_volume(d_volume)
 
+
+def gui_exit_callback():
+    print("gui_exit_callback")
+    global active
+    active = False
 
 def main():
+    global active
+    active = True
+
     audio_controller = AudioController()
-    gui_controller = GuiController()
+    gui_controller = GuiController(exit_callback=gui_exit_callback)
     monitor_controller = MonitorController()
     serial_controller = SerialController()
 
-    active = True
-
     while active:
         try:
-            if msvcrt.kbhit() and msvcrt.getch() == b'r':
-                print("Resetting audio controller")
-                gui_controller.show_general_message(
-                    "Resetting audio controller")
-                audio_controller.reset()
-                gui_controller.update()
-                time.sleep(1)
-                continue
             if serial_controller.is_connected == False:
                 serial_controller.connect()
                 gui_controller.show_general_message(
-                    "Connected to serial {}".format(serial_controller.serial.name))
+                    "Connected to {}".format(serial_controller.serial.name)
+                )
             else:
                 frame = serial_controller.update()
                 if frame != None:
@@ -67,7 +69,7 @@ def main():
         except KeyboardInterrupt:
             print("Keyboard interrupt")
             serial_controller.disconnect()
-            active = False
+            gui_controller.exit()
 
 
 if __name__ == "__main__":
